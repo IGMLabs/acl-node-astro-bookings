@@ -23,9 +23,12 @@ function printFile(err, fileContent) {
 
 fs.readFile(scriptFile, printFile) // Lee de forma asincrona
 
+
+
 function onWriteEnd(){
     console.log("Archivo copiado");
 }
+
 
 function copyFile(err, fileContent) {
     if (err) {
