@@ -27,7 +27,7 @@ function printHello2(name) {
 setTimeout(printHello, fourSeconds);
 
 
-
+// No recomendable usar esta forma
 console.log("Before with arrow function expression");
 const printHello3 = () => console.log("Hello2");
 setTimeout(printHello3, fourSeconds);

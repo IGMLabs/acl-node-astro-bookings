@@ -6,7 +6,7 @@ import * as fs from 'fs';
 const scriptFile = process.argv[1]; // Posicion del fichero
 console.log(`scriptFile: ${scriptFile}`);
 
-// const fileContent = fs.readFileSync(scriptFile) // Leer de forma asincrona
+// const fileContent = fs.readFileSync(scriptFile) // Leer de forma sincrona
 // console.log(`fileContent:`);
 // console.log(fileContent);
 // console.log(`toString::`);
@@ -21,7 +21,7 @@ function printFile(err, fileContent) {
     }
 }; 
 
-fs.readFile(scriptFile, printFile)
+fs.readFile(scriptFile, printFile) // Lee de forma asincrona
 
 function onWriteEnd(){
     console.log("Archivo copiado");
