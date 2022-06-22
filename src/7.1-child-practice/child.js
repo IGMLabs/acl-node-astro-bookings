@@ -2,32 +2,32 @@ console.log("child started working");
 process.on("message", (message) => {
   const startTime = process.hrtime();
   try {
-    const secuencia = generarSecuencia(message.seed);
-    sendResponse(startTime, secuencia, null);
+    const sequence = generateSequence(message.seed);
+    sendResponse(startTime, sequence, null);
   } catch (error) {
     console.log("Child error! ", error);
     sendResponse(startTime, "", error);
   }
 });
 
-function sendResponse(startTime, secuencia, error) {
+function sendResponse(startTime, sequence, error) {
   const endTime = process.hrtime();
-  const firma = firmarSecuencia(startTime, endTime);
-  const secuenciaFirmada = secuencia + " " + firma;
+  const signed = signSequence(startTime, endTime);
+  const sequenceSigned = sequence + " " + signed;
   if (error) {
-    const errorMessage = buildErrorMessage(error, firma);
+    const errorMessage = buildErrorMessage(error, signed);
     process.send(errorMessage);
     process.exit(1);
   } else {
-    const okMessage = buildOkMessage(secuenciaFirmada);
+    const okMessage = buildOkMessage(sequenceSigned);
     process.send(okMessage);
     process.exit(0);
   }
 }
 
-function generarSecuencia(seed) {
+function generateSequence(seed) {
   if (!parseInt(seed)) {
-    throw new Error(`No es un número válido ${seed}`);
+    throw new Error(`Esto no es un número válido =>  ${seed}`);
   }
   if (seed <= 0) {
     return "";
@@ -35,41 +35,41 @@ function generarSecuencia(seed) {
   if (seed === 1) {
     return "1";
   }
-  let secuencia = "" + seed;
-  let valorActual = seed;
+  let sequence = "" + seed;
+  let currentValue = seed;
 
-  while (valorActual > 1) {
-    valorActual = generateNewValue(valorActual);
-    secuencia += " " + valorActual;
+  while (currentValue > 1) {
+    currentValue = generateNewValue(currentValue);
+    sequence += " " + currentValue;
   }
-  return secuencia;
+  return sequence;
 }
 
-function generateNewValue(valorActual) {
+function generateNewValue(currentValue) {
   let newValue = 0;
-  if (isEven(valorActual)) {
-    newValue = valorActual / 2;
+  if (isEven(currentValue)) {
+    newValue = currentValue / 2;
   } else {
-    newValue = valorActual * 3 + 1;
+    newValue = currentValue * 3 + 1;
   }
   return newValue;
 }
 
-function firmarSecuencia(startTime, endTime) {
-  let firma = "";
-  const tiempoEjecucion = endTime[1] - startTime[1];
-  firma += " , Nanosecond Start: " + startTime[1];
-  firma += " , Nanoseconds End: " + endTime[1];
-  firma += " , Total Nanoseconds : " + tiempoEjecucion;
-  return firma;
+function signSequence(startTime, endTime) {
+  let signature = "";
+  const executionTime = endTime[1] - startTime[1];
+  signature += "Nanosecond Start: " + startTime[1];
+  signature += ", Nanoseconds End: " + endTime[1];
+  signature += ", Total Nanoseconds : " + executionTime;
+  return signature;
 }
 
-function buildErrorMessage(err, secuencia) {
-  return { err: err.message, secuencia: secuencia };
+function buildErrorMessage(err, sequence) {
+  return { err: err.message, sequence: sequence };
 }
 
-function buildOkMessage(secuencia) {
-  return { secuencia: secuencia };
+function buildOkMessage(sequence) {
+  return { sequence: sequence };
 }
 
 function isEven(seed) {
