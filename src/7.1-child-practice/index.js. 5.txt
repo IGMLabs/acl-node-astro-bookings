@@ -1,1 +1,0 @@
-5 16 8 4 2 1 , Nanosecond Start: 452513000 , Nanoseconds End: 452531200 , Total Nanoseconds : 18200
